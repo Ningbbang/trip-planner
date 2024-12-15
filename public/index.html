@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial_scale=1.0">
+        <meta charset="utf-8">
+
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    </head>
+    <body>
+        <div class="grid-container">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-menu-item">
+                    <a href="/"><span class="material-symbols-outlined">overview</span> Overview</a>
+                </div>
+                <div class="header-menu-item">
+                    <a href="list-page.html"><span class="material-symbols-outlined">restaurant</span> Restaurant</a>
+                </div>
+                <div class="header-menu-item">
+                    <a href="list-page.html"><span class="material-symbols-outlined">church</span> Museum</a>
+                </div>
+                <div class="header-menu-item">
+                    <a href="list-page.html"><span class="material-symbols-outlined">pool</span> Activity></a>
+                </div>
+                <div class="header-menu-item">
+                    <a href="list-page.html"><span class="material-symbols-outlined">bed</span> Hotel</a>
+                </div>
+            </header>
+
+            
+            <!-- Sidebar -->
+            <aside id="sidebar">
+                <div class="sidebar-title">
+                    <div class="sidebar-brand">
+                        <a href="/"><span class="material-symbols-outlined">inventory</span> Ningbbang</a>
+                        <span class="material-symbols-outlined" onclick="closeSidebar()">close</span>
+                    </div>
+                </div>
+
+                <ul class="sidebar-list">
+                    <li class="sidebar-list-item" onclick="page1()">
+                        <img alt="Türkiye" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/TR.svg" width="20px" height="15px"> Türkiye (Jan, 2025)
+                    </li>
+                    <li class="sidebar-list-item" onclick="page2()">
+                        <img alt="Türkiye" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/TR.svg" width="20px" height="15px"> Türkiye (Aug, 2025)
+                    </li>
+                    <li class="sidebar-list-item" onclick="page3()">
+                        <img alt="Korea" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/KR.svg" width="20px" height="15px"> Korea (Aug, 2025)
+                    </li>
+                    <li class="sidebar-list-item" onclick="page4()">
+                        <img alt="Thailand" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/TH.svg" width="20px" height="15px"> Thailand (Sep, 2025)
+                    </li>
+                    <li class="sidebar-list-item" onclick="page5()">
+                        <img src="korea-logo.png" width="20px" height="20px"> 백제 (Soon)
+                    </li>
+                </ul>
+            </aside>
+
+            <div class="main-container">
+                <div id="main-map">
+                    
+                </div>
+
+                <div id="main-planner">
+                    <span>Plan</span>
+                    <button id="add-button" onclick="addPlan()"><span class="material-symbols-outlined">
+                        add
+                        </span></button>
+                    <div id="planned-items">
+                    </div>
+
+                    <span>Unplanned Items</span>
+                    <div id="unplanned-items">
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                var map = L.map('main-map').setView([41.0, 28.9], 11);
+                function myMap() {
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '© OpenStreetMap contributors'
+                    }).addTo(map);
+                }
+                myMap();
+
+                async function loadItems(){
+                    const unplanned = document.getElementById("unplanned-items")
+                    const response = await fetch('/overview')
+                    const json = await response.json();
+                    const items = json.data;
+
+                    items.forEach((item)=> {
+                        const itemDiv = document.createElement("div");
+                        itemDiv.className = "plan-items";
+                        itemDiv.draggable = true;
+                        itemDiv.textContent = item.title;
+
+                        itemDiv.addEventListener("dragstart", function (e) {
+                            e.dataTransfer.setData("text/plain", e.target.id);
+                            e.target.classList.add("dragging");
+                        });
+
+                        itemDiv.addEventListener("dragend", function (e) {
+                            e.target.classList.remove("dragging");
+                        });
+
+                        unplanned.appendChild(itemDiv);
+                        
+                        L.marker([item.lat, item.lng]).addTo(map);
+                    });
+                }
+                loadItems();
+
+                function setupDragAndDrop() {
+                    const unplanned = document.getElementById("unplanned-items");
+                    const planned = document.getElementById("planned-items");
+
+                    // Function to handle drop events
+                    function handleDrop(e, targetContainer) {
+                        e.preventDefault();
+                        const draggingElement = document.querySelector(".dragging");
+                        if (draggingElement) {
+                            targetContainer.appendChild(draggingElement);
+                        }
+                    }
+
+                    // Add dragover and drop listeners for planned items container
+                    planned.addEventListener("dragover", (e) => e.preventDefault());
+                    planned.addEventListener("drop", (e) => handleDrop(e, planned));
+
+                    // Add dragover and drop listeners for unplanned items container
+                    unplanned.addEventListener("dragover", (e) => e.preventDefault());
+                    unplanned.addEventListener("drop", (e) => handleDrop(e, unplanned));
+                }
+                setupDragAndDrop();
+
+                function addPlan() {
+                    const planned = document.getElementById("planned-items");
+                    const itemDiv = document.createElement("div");
+                    itemDiv.className = "plan-box"
+                    itemDiv.innerHTML = `<span class="material-symbols-outlined">chevron_right</span>test`
+                    planned.appendChild(itemDiv);
+                }
+
+
+            </script>
+    </body>
+<html>

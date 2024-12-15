@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta name="viewport" content="width=device-width, initial_scale=1.0">
+        <meta charset="utf-8">
+
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    </head>
+    <body>
+        <div class="grid-container">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-menu-item">
+                    <span class="material-symbols-outlined">overview</span> Overview
+                </div>
+                <div class="header-menu-item">
+                    <span class="material-symbols-outlined">restaurant</span> Restaurant
+                </div>
+                <div class="header-menu-item">
+                    <span class="material-symbols-outlined">church</span> Museum
+                </div>
+                <div class="header-menu-item">
+                    <span class="material-symbols-outlined">pool</span> Activity
+                </div>
+                <div class="header-menu-item">
+                    <span class="material-symbols-outlined">bed</span> Hotel
+                </div>
+            </header>
+
+            
+            <!-- Sidebar -->
+            <aside id="sidebar">
+                <div class="sidebar-title">
+                    <div class="sidebar-brand">
+                        <a href="index.html"><span class="material-symbols-outlined">inventory</span> Ningbbang</a>
+                        <span class="material-symbols-outlined" onclick="closeSidebar()">close</span>
+                    </div>
+                </div>
+
+                <ul class="sidebar-list">
+                    <li class="sidebar-list-item" onclick="page1()">
+                        <img alt="Türkiye" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/TR.svg" width="20px" height="15px"> Türkiye (Jan, 2025)
+                    </li>
+                    <li class="sidebar-list-item" onclick="page2()">
+                        <img alt="Türkiye" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/TR.svg" width="20px" height="15px"> Türkiye (Aug, 2025)
+                    </li>
+                    <li class="sidebar-list-item" onclick="page3()">
+                        <img alt="Korea" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/KR.svg" width="20px" height="15px"> Korea (Aug, 2025)
+                    </li>
+                    <li class="sidebar-list-item" onclick="page4()">
+                        <img alt="Thailand" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/TH.svg" width="20px" height="15px"> Thailand (Sep, 2025)
+                    </li>
+                    <li class="sidebar-list-item" onclick="page5()">
+                        <img src="korea-logo.png" width="20px" height="20px"> 백제 (Soon)
+                    </li>
+                </ul>
+            </aside>
+
+            <!-- add page -->
+            <div class="add-item">
+                <div class="add-item-grid">
+                    <div id="map"></div>
+                    <div id="main-picture">
+                        <input type="file" name="Title picture" accept="image/png, image/jpg, image/jpeg" 
+                            onchange="viewImage(event)"/>
+                        <div id="main-picture-preview">
+                            <img id="preview" alt="Preview Image" width="350px" height="350px" style="margin:25px">
+                        </div>
+                    </div>
+                </div>
+                <div id="item-detail">
+                    <div class="coords">
+                        <label for="lat">Latitude</label>
+                        <input type="text" id="lat">
+                        
+                        <label for="lng">Longitude</label>
+                        <input type="text" id="lng">
+                    </div>
+                    <div class="title">
+                        <label for="title">Title</label>
+                        <input type="text" id="title">
+                    </div>
+                    <div class="desc">
+                        <label for="desc">Description</label>
+                        <input type="text" id="desc">
+                    </div>
+                    <div>
+                        <button type="button" onclick="addItem()">Save</button>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                const trip_code = "2501_turkey";
+                const category = "restaurant";
+                var marker = []
+                var map
+
+                function viewImage(event) {
+                    var input = event.target;
+                    var image = document.getElementById("preview");
+                    if (input.files && input.files[0]) {
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            image.src = e.target.result;
+                        }
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                };
+
+                function myMap(){
+                    map = L.map('map').setView([41.0, 28.9], 10);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '© OpenStreetMap contributors'
+                    }).addTo(map);
+                };
+                myMap();
+
+                map.on('click', function(e) {
+                    console.log(marker[0]);
+                    if (marker.length > 0) {
+                        map.removeLayer(marker[0]);
+                    }
+                    marker = [];
+                    var mc = new L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+                    marker.push(mc);
+                    document.getElementById("lat").value = e.latlng.lat;
+                    document.getElementById("lng").value = e.latlng.lng;
+                });
+
+                async function addItem() {
+                    const title = document.getElementById("title").value;
+                    const desc = document.getElementById("desc").value;
+                    const lat = document.getElementById("lat").value;
+                    const lng = document.getElementById("lng").value;
+
+                    const itemData = {
+                        trip_code: trip_code,
+                        category: category,
+                        title: title,
+                        desc: desc,
+                        lat: lat,
+                        lng: lng
+                    }
+                    console.log(itemData);
+                    
+                    fetch('/add-item', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(itemData)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Item added:", data);
+                    })
+                    
+                    document.getElementById("title").value = "";
+                    document.getElementById("desc").value = "";
+                    document.getElementById("lat").value = "";
+                    document.getElementById("lng").value = "";
+                };
+                
+            </script>
+    </body>
+<html>
