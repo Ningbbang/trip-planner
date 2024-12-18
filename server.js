@@ -6,9 +6,9 @@ require('dotenv').config();
 port = 3000
 
 const api_key = process.env.GM_API_KEY;
-const log_db = new Datastore('log_db.db');
+const log_db = new Datastore({filename: path.join(__dirname, 'databases', 'log_db.db')});
 const places_db = new Datastore({filename: path.join(__dirname, 'databases', 'places_db.db')});
-const plan_db = new Datastore('plan_db.db');
+const plan_db = new Datastore({filename: path.join(__dirname, 'databases', 'plan_db.db')});
 
 log_db.loadDatabase();
 places_db.loadDatabase();

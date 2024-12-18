@@ -112,7 +112,7 @@
 
                         unplanned.appendChild(itemDiv);
                         
-                        L.marker([item.lat, item.lng]).addTo(map);
+                        L.marker([item.lat, item.lng]).bindPopup(item.title).addTo(map);
                     });
                 }
                 loadItems();
@@ -138,17 +138,34 @@
                     unplanned.addEventListener("dragover", (e) => e.preventDefault());
                     unplanned.addEventListener("drop", (e) => handleDrop(e, unplanned));
                 }
-                setupDragAndDrop();
-
+                setupDragAndDrop()
+                
                 function addPlan() {
                     const planned = document.getElementById("planned-items");
                     const itemDiv = document.createElement("div");
                     itemDiv.className = "plan-box"
-                    itemDiv.innerHTML = `<span class="material-symbols-outlined">chevron_right</span>test`
+                    itemDiv.innerHTML = `<span class="material-symbols-outlined">chevron_right</span><span class="plan">Type Plan Title Name</span>
+                        <button class="plan-name-edit" onclick="editName(this)"><span class="material-symbols-outlined">edit</span></button>
+                        <button class="plan-name-edit-close" onclick="saveName(this)" style="display:none;"><span class="material-symbols-outlined">save</span></button>`
                     planned.appendChild(itemDiv);
                 }
 
+                function editName(target){
+                    const title = target.parentElement.querySelector(".plan");
+                    const title_text = title.textContent;
+                    title.innerHTML = `<input type="text" value="${title_text}" class="plan-name-input">`
+                    title.parentElement.querySelector(".plan-name-edit").classList.add("hide");
+                    title.parentElement.querySelector(".plan-name-edit-close").style.display = ""
+                }
 
+                function saveName(target){
+                    const title = target.parentElement.parentElement.querySelector(".plan");
+                    const input_text = target.parentElement.parentElement.querySelector('.plan-name-input').value;
+                    title.innerHTML = `${input_text}`
+                    title.parentElement.querySelector(".plan-name-edit").style.display = ""
+                    title.parentElement.querySelector(".plan-name-edit-close").classList.add("hide");
+                    title.className = "plan-done"
+                }
             </script>
     </body>
 <html>
