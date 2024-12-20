@@ -70,6 +70,8 @@
                     <button id="add-button" onclick="addPlan()"><span class="material-symbols-outlined">
                         add
                         </span></button>
+                    <button id="save-button" onclick="savePlan()"><span class="material-symbols-outlined">save</span></button>
+                        
                     <div id="planned-items">
                     </div>
 
@@ -90,16 +92,43 @@
                 myMap();
 
                 async function loadItems(){
+                    const plan_response = await fetch('/plan')
+                    const plan_json = await plan_response.json();
+                    const plan_items = plan_json.data;
+                    let plan_names = [... new Set(plan_items.map(x=>x['plan-name']))];
+
+                    plan_names.forEach((item) => {
+                        const planned = document.getElementById("planned-items");
+                        const itemDiv = document.createElement("div");
+                        itemDiv.className = "plan-box"
+                        itemDiv.innerHTML = `<div><span style="cursor:pointer;" onclick="hideItem(this)">
+                            <span class="material-symbols-outlined">keyboard_arrow_down</span></span>
+                            <span class="plan-done">${item}</span></div><div class="plan-item-list"></div>`
+                        planned.appendChild(itemDiv);
+
+                        function handleDrop(e, targetContainer) {
+                            e.preventDefault();
+                            const draggingElement = document.querySelector(".dragging");
+                            if (draggingElement) {
+                                targetContainer.appendChild(draggingElement);
+                            }
+                        }
+
+                        itemDiv.addEventListener("dragover", (e) => e.preventDefault());
+                        itemDiv.addEventListener("drop", (e) => handleDrop(e, itemDiv.querySelector(".plan-item-list")));
+                    })
+
                     const unplanned = document.getElementById("unplanned-items")
                     const response = await fetch('/overview')
                     const json = await response.json();
                     const items = json.data;
 
-                    items.forEach((item)=> {
+                    items.forEach((item) => {
                         const itemDiv = document.createElement("div");
                         itemDiv.className = "plan-items";
                         itemDiv.draggable = true;
                         itemDiv.textContent = item.title;
+                        itemDiv.id = item._id;
 
                         itemDiv.addEventListener("dragstart", function (e) {
                             e.dataTransfer.setData("text/plain", e.target.id);
@@ -111,9 +140,20 @@
                         });
 
                         unplanned.appendChild(itemDiv);
-                        
                         L.marker([item.lat, item.lng]).bindPopup(item.title).addTo(map);
                     });
+
+                    plan_items.forEach((item) => {
+                        const planItem = document.getElementById(item["plan-item"])
+                        console.log(planItem)
+                        const planLists = document.getElementsByClassName("plan-item-list")
+                        for (list of planLists) {
+                            if (list.parentElement.parentElement.querySelector(".plan-done").textContent === item["plan-name"]) {
+                                list.appendChild(planItem)
+                            }
+                        }
+                    })
+
                 }
                 loadItems();
 
@@ -130,10 +170,6 @@
                         }
                     }
 
-                    // Add dragover and drop listeners for planned items container
-                    planned.addEventListener("dragover", (e) => e.preventDefault());
-                    planned.addEventListener("drop", (e) => handleDrop(e, planned));
-
                     // Add dragover and drop listeners for unplanned items container
                     unplanned.addEventListener("dragover", (e) => e.preventDefault());
                     unplanned.addEventListener("drop", (e) => handleDrop(e, unplanned));
@@ -144,10 +180,21 @@
                     const planned = document.getElementById("planned-items");
                     const itemDiv = document.createElement("div");
                     itemDiv.className = "plan-box"
-                    itemDiv.innerHTML = `<span class="material-symbols-outlined">chevron_right</span><span class="plan">Type Plan Title Name</span>
+                    itemDiv.innerHTML = `<div><span style="cursor:pointer;" onclick="hideItem(this)"><span class="material-symbols-outlined">keyboard_arrow_down</span></span><span class="plan">Type Plan Title Name</span>
                         <button class="plan-name-edit" onclick="editName(this)"><span class="material-symbols-outlined">edit</span></button>
-                        <button class="plan-name-edit-close" onclick="saveName(this)" style="display:none;"><span class="material-symbols-outlined">save</span></button>`
+                        <button class="plan-name-edit-close" onclick="saveName(this)" style="display:none;"><span class="material-symbols-outlined">save</span></button></div><div class="plan-item-list"></div>`
                     planned.appendChild(itemDiv);
+
+                    function handleDrop(e, targetContainer) {
+                        e.preventDefault();
+                        const draggingElement = document.querySelector(".dragging");
+                        if (draggingElement) {
+                            targetContainer.appendChild(draggingElement);
+                        }
+                    }
+
+                    itemDiv.addEventListener("dragover", (e) => e.preventDefault());
+                    itemDiv.addEventListener("drop", (e) => handleDrop(e, itemDiv.querySelector(".plan-item-list")));
                 }
 
                 function editName(target){
@@ -165,6 +212,49 @@
                     title.parentElement.querySelector(".plan-name-edit").style.display = ""
                     title.parentElement.querySelector(".plan-name-edit-close").classList.add("hide");
                     title.className = "plan-done"
+                }
+
+                function hideItem(target){
+                    const list = target.parentElement.parentElement.querySelector(".plan-item-list")
+                    list.classList.toggle('hide')
+                    if (list.classList.contains('hide')){
+                        target.innerHTML = `<span class="material-symbols-outlined">chevron_right</span>`
+                    } else {
+                        target.innerHTML = `<span class="material-symbols-outlined">keyboard_arrow_down</span>`
+                    }                   
+                }
+
+                function savePlan(target){
+                    var itemData = []
+                    const planItemList = document.getElementsByClassName("plan-item-list")
+                    for (list of planItemList) {
+                        const planName = list.parentElement.parentElement.querySelector(".plan-done")
+                        const items = list.getElementsByClassName("plan-items")
+                        if (items) {
+                            for (item of items) {
+                                itemData.push({'plan-name':planName.textContent, 'plan-item':item.id})
+                            }
+                        }
+                    }
+
+                    if (itemData.length === 0) {
+                        alert("No items to save!");
+                        return;
+                    }
+                    
+                    fetch('/plan', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(itemData)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Plan added:", data);
+                    })
+                    alert('Plan saved!')
+
                 }
             </script>
     </body>

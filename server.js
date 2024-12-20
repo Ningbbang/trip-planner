@@ -21,7 +21,7 @@ app.post('/add-item', (req, res) => {
     places_db.insert(data);
     console.log('item added :', data)
     res.json(data);
-})
+});
 
 app.get('/overview', (req, res) => {
     places_db.find({}, (err, data) => {
@@ -32,6 +32,24 @@ app.get('/overview', (req, res) => {
         res.json({data});
     });
 });
+
+app.post('/plan', (req, res) => {
+    const data = req.body;
+    plan_db.insert(data);
+    console.log('plan added : ', data)
+    res.json(data)
+});
+
+app.get('/plan', (req, res) => {
+    plan_db.find({}, (err, data) => {
+        if (err) {
+            response.end();
+            return;
+        }
+        res.json({data});
+    });
+});
+
 
 app.listen(port, () => {
     console.log(`app is running on http://localhost:${port}`)

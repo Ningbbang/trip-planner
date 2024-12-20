@@ -167,6 +167,8 @@ a {
 }
 
 #planned-items {
+    display:flex;
+    flex-direction:column;
     width: 400px;
     height: 45vh;
     border-style: solid;
@@ -176,6 +178,8 @@ a {
 }
 
 #unplanned-items {
+    display:flex;
+    flex-direction:column;
     width: 400px;
     height: 35vh;
     border-style: solid;
@@ -199,10 +203,11 @@ a {
 }
 
 .plan-box {
+    display:flex;
+    flex-direction:column;
     border-radius: 5px;
     box-shadow: 0 6px 7px -2px rgba(0, 0, 0, 0.2);
-    width : 370px;
-    height: 30px;
+    width : 390px;
     border-style: solid;
     border-width: 0.5px;
     border-color: #444;
@@ -213,6 +218,12 @@ a {
 
 .plan-items:hover {
     background-color: #cceeff;
+}
+
+.plan-item-list {
+    display:flex;
+    flex-direction: column;
+    width: 370px;
 }
 
 .plan-name-edit, .plan-name-edit-close {
