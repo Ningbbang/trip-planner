@@ -61,11 +61,26 @@
             </aside>
 
             <!-- add page -->
-                <div class="list-add">
-                    <a href="add-item.html"><div style="width:100%; height:100%">
-                        <span class="material-symbols-outlined">add</span>
-                        <span class="no-result"></span>
-                    </div></a>
-                </div>
+            <div id="list-add">
+                <a href="add-item.html"><span class="material-symbols-outlined">add</span></a>
+            </div>
+
+            <script>
+                async function loadPlaces(){
+                    const plan_response = await fetch('/overview')
+                    const plan_json = await plan_response.json();
+                    const plan_items = plan_json.data;
+                    const container = document.getElementById("list-add");
+                    console.log(plan_items)
+
+                    plan_items.forEach((item) => {
+                        var list_add = document.createElement("div")
+                        list_add.classList.add("list-item")
+                        list_add.innerHTML = `<p>Title : ${item.title}</p><p>Description : ${item.desc}</p><p>lat : ${item.lat} / lng : ${item.lng}</p>`
+                        container.append(list_add)
+                    })
+                }
+                loadPlaces()
+            </script>
     </body>
 <html>

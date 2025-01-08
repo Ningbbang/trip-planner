@@ -35,6 +35,7 @@ app.get('/overview', (req, res) => {
 
 app.post('/plan', (req, res) => {
     const data = req.body;
+    plan_db.remove({}, {multi:true}, function (err, res) {} );
     plan_db.insert(data);
     console.log('plan added : ', data)
     res.json(data)
