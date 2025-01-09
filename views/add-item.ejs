@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial_scale=1.0">
         <meta charset="utf-8">
 
-        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="../css/styles.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
@@ -17,17 +17,17 @@
                 <div class="header-menu-item">
                     <a href="/"><span class="material-symbols-outlined">overview</span> Overview</a>
                 </div>
-                <div class="header-menu-item">
-                    <a href="list-page.html"><span class="material-symbols-outlined">restaurant</span> Restaurant</a>
+                <div class="header-menu-item" onclick="window.location.href='/list-page/restaurant'">
+                    <span class="material-symbols-outlined">restaurant</span> Restaurant
                 </div>
-                <div class="header-menu-item">
-                    <a href="list-page.html"><span class="material-symbols-outlined">church</span> Museum</a>
+                <div class="header-menu-item" onclick="window.location.href='/list-page/museum'">
+                    <span class="material-symbols-outlined">church</span> Museum
                 </div>
-                <div class="header-menu-item">
-                    <a href="list-page.html"><span class="material-symbols-outlined">pool</span> Activity</a>
+                <div class="header-menu-item" onclick="window.location.href='/list-page/activity'">
+                    <span class="material-symbols-outlined">pool</span> Activity
                 </div>
-                <div class="header-menu-item">
-                    <a href="list-page.html"><span class="material-symbols-outlined">bed</span> Hotel</a>
+                <div class="header-menu-item" onclick="window.location.href='/list-page/hotel'">
+                    <span class="material-symbols-outlined">bed</span> Hotel
                 </div>
             </header>
 
@@ -96,7 +96,7 @@
 
             <script>
                 const trip_code = "2501_turkey";
-                const category = "restaurant";
+                const category = '<%= category %>';
                 var marker = []
                 var map
 
@@ -149,7 +149,7 @@
                     }
                     console.log(itemData);
                     
-                    fetch('/add-item', {
+                    fetch('/add-item/<%= category %>', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'

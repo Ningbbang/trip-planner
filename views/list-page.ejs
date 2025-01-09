@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial_scale=1.0">
         <meta charset="utf-8">
 
-        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="../css/styles.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
@@ -14,19 +14,19 @@
         <div class="grid-container">
             <!-- Header -->
             <header class="header">
-                <div class="header-menu-item">
-                    <a href="/"><span class="material-symbols-outlined">overview</span> Overview</a>
+                <div class="header-menu-item" onclick="window.location.href='/'">
+                    <span class="material-symbols-outlined">overview</span> Overview</a>
                 </div>
-                <div class="header-menu-item">
+                <div class="header-menu-item" onclick="window.location.href='/list-page/restaurant'">
                     <span class="material-symbols-outlined">restaurant</span> Restaurant
                 </div>
-                <div class="header-menu-item">
+                <div class="header-menu-item" onclick="window.location.href='/list-page/museum'">
                     <span class="material-symbols-outlined">church</span> Museum
                 </div>
-                <div class="header-menu-item">
+                <div class="header-menu-item" onclick="window.location.href='/list-page/activity'">
                     <span class="material-symbols-outlined">pool</span> Activity
                 </div>
-                <div class="header-menu-item">
+                <div class="header-menu-item" onclick="window.location.href='/list-page/hotel'">
                     <span class="material-symbols-outlined">bed</span> Hotel
                 </div>
             </header>
@@ -61,13 +61,14 @@
             </aside>
 
             <!-- add page -->
-            <div id="list-add">
-                <a href="add-item.html"><span class="material-symbols-outlined">add</span></a>
+            <div id="list-add" onclick="window.location.href='/add-item/<%= category %>'" style="width: 25px; height: 25px;">
+                <span class="material-symbols-outlined">add</span></a>
             </div>
 
             <script>
                 async function loadPlaces(){
-                    const plan_response = await fetch('/overview')
+                    // const plan_response = await fetch('/overview')
+                    const plan_response = await fetch('/api/<%= category %>')
                     const plan_json = await plan_response.json();
                     const plan_items = plan_json.data;
                     const container = document.getElementById("list-add");

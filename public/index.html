@@ -17,17 +17,17 @@
                 <div class="header-menu-item">
                     <a href="/"><span class="material-symbols-outlined">overview</span> Overview</a>
                 </div>
-                <div class="header-menu-item">
-                    <a href="list-page.html"><span class="material-symbols-outlined">restaurant</span> Restaurant</a>
+                <div class="header-menu-item" onclick="window.location.href='/list-page/restaurant'">
+                    <span class="material-symbols-outlined">restaurant</span> Restaurant
                 </div>
-                <div class="header-menu-item">
-                    <a href="list-page.html"><span class="material-symbols-outlined">church</span> Museum</a>
+                <div class="header-menu-item" onclick="window.location.href='/list-page/museum'">
+                    <span class="material-symbols-outlined">church</span> Museum
                 </div>
-                <div class="header-menu-item">
-                    <a href="list-page.html"><span class="material-symbols-outlined">pool</span> Activity></a>
+                <div class="header-menu-item" onclick="window.location.href='/list-page/activity'">
+                    <span class="material-symbols-outlined">pool</span> Activity
                 </div>
-                <div class="header-menu-item">
-                    <a href="list-page.html"><span class="material-symbols-outlined">bed</span> Hotel</a>
+                <div class="header-menu-item" onclick="window.location.href='/list-page/hotel'">
+                    <span class="material-symbols-outlined">bed</span> Hotel
                 </div>
             </header>
 
@@ -101,7 +101,7 @@
                         const planned = document.getElementById("planned-items");
                         const itemDiv = document.createElement("div");
                         itemDiv.className = "plan-box"
-                        itemDiv.innerHTML = `<div><span style="cursor:pointer;" onclick="hideItem(this)">
+                        itemDiv.innerHTML = `<div class="plan-box-title"><span style="cursor:pointer;" onclick="hideItem(this)">
                             <span class="material-symbols-outlined">keyboard_arrow_down</span></span>
                             <span class="plan-done">${item}</span></div><div class="plan-item-list"></div>`
                         planned.appendChild(itemDiv);
@@ -142,13 +142,12 @@
                         unplanned.appendChild(itemDiv);
                         L.marker([item.lat, item.lng]).bindPopup(item.title).addTo(map);
                     });
-
+                    console.log(plan_items);
                     plan_items.forEach((item) => {
                         const planItem = document.getElementById(item["plan-item"])
-                        console.log(planItem)
-                        const planLists = document.getElementsByClassName("plan-item-list")
-                        for (list of planLists) {
-                            if (list.parentElement.parentElement.querySelector(".plan-done").textContent === item["plan-name"]) {
+                        const planItemList = document.getElementsByClassName("plan-box")
+                        for (list of planItemList) {
+                            if (list.querySelector("div > span:nth-child(2)").textContent === item["plan-name"]) {
                                 list.appendChild(planItem)
                             }
                         }
@@ -180,7 +179,7 @@
                     const planned = document.getElementById("planned-items");
                     const itemDiv = document.createElement("div");
                     itemDiv.className = "plan-box"
-                    itemDiv.innerHTML = `<div><span style="cursor:pointer;" onclick="hideItem(this)"><span class="material-symbols-outlined">keyboard_arrow_down</span></span><span class="plan">Type Plan Title Name</span>
+                    itemDiv.innerHTML = `<div class="plan-box-title"><span style="cursor:pointer;" onclick="hideItem(this)"><span class="material-symbols-outlined">keyboard_arrow_down</span></span><span class="plan">Type Plan Title Name</span>
                         <button class="plan-name-edit" onclick="editName(this)"><span class="material-symbols-outlined">edit</span></button>
                         <button class="plan-name-edit-close" onclick="saveName(this)" style="display:none;"><span class="material-symbols-outlined">save</span></button></div><div class="plan-item-list"></div>`
                     planned.appendChild(itemDiv);
@@ -227,9 +226,9 @@
                 function savePlan(target){
                     var itemData = []
 
-                    const planItemList = document.getElementsByClassName("plan-item-list")
+                    const planItemList = document.getElementsByClassName("plan-box")
                     for (list of planItemList) {
-                        const planName = list.parentElement.parentElement.querySelector(".plan-done")
+                        const planName = list.querySelector("div > span:nth-child(2)")
                         const items = list.getElementsByClassName("plan-items")
                         if (items) {
                             for (item of items) {
