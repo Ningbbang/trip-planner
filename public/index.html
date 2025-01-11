@@ -168,13 +168,17 @@
                         var color = '';
 
                         if (item.category === "restaurant") {
-                            category = "fa-solid fa-utensils";
+                            // category = "fa-solid fa-utensils";
+                            category = "restaurant";
                         } else if (item.category === "museum") {
-                            category = "fa-solid fa-building-columns"
+                            // category = "fa-solid fa-building-columns"
+                            category = "church"
                         } else if (item.category === "activity") {
-                            category = "fa-solid fa-person-swimming"
+                            // category = "fa-solid fa-person-swimming"
+                            category = "pool"
                         } else if (item.category === "hotel") {
-                            category = "fa-solid fa-bed"
+                            // category = "fa-solid fa-bed"
+                            category = "bed"
                         };
                         
                         console.log(plan_items);
@@ -186,13 +190,20 @@
                             }
                         };
 
+                        // icon = L.divIcon({
+                        //     className: 'custom-div-icon',
+                        //         html: `<div style='background-color:${color}' class='marker-pin'></div><i class=${category}>`,
+                        //         iconSize: [30, 42],
+                        //         iconAnchor: [15, 42]
+                        //     });
+                        
                         icon = L.divIcon({
                             className: 'custom-div-icon',
-                                html: `<div style='background-color:${color}' class='marker-pin'></div><i class=${category}>`,
+                                html: `<span style='background-color:${color}; border-radius: 50%;' class="material-symbols-outlined">${category}</span>`,
                                 iconSize: [30, 42],
                                 iconAnchor: [15, 42]
                             });
-                        
+
                         marker = L.marker([item.lat, item.lng], {icon : icon}).bindPopup(`${item.title} / ${plan_name}`).addTo(map);
                         markers.push(marker)
                     }
