@@ -9,6 +9,8 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-aF5/MB+BuKiqTrhFz/NX2PxLEhrO7OhXZ5wI2L5U6cgGTRJdqVWvdcOdJVA7U9ZMWQnU1E9MT9KElr7K3wDL7g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     </head>
     <body>
         <div class="grid-container">
@@ -83,6 +85,7 @@
 
             <script>
                 var map = L.map('main-map').setView([41.0, 28.9], 11);
+                var markers = [];
                 function myMap() {
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         maxZoom: 19,
@@ -92,10 +95,12 @@
                 myMap();
 
                 async function loadItems(){
+                    const colors = ['#ff83b0', '#dd97e8', '#f57a73', '#fec15e', '#ffff00', '#ccff00', '#7c9d45', '#4ebcff', '#002790', '#001d4f', '#473083', '#6a3896'];
                     const plan_response = await fetch('/plan')
                     const plan_json = await plan_response.json();
                     const plan_items = plan_json.data;
                     let plan_names = [... new Set(plan_items.map(x=>x['plan-name']))];
+                    var idx = 0;
 
                     plan_names.forEach((item) => {
                         const planned = document.getElementById("planned-items");
@@ -103,7 +108,7 @@
                         itemDiv.className = "plan-box"
                         itemDiv.innerHTML = `<div class="plan-box-title"><span style="cursor:pointer;" onclick="hideItem(this)">
                             <span class="material-symbols-outlined">keyboard_arrow_down</span></span>
-                            <span class="plan-done">${item}</span></div><div class="plan-item-list"></div>`
+                            <span class="plan-done">${item}</span><span></span></div><div class="plan-item-list"></div>`
                         planned.appendChild(itemDiv);
 
                         function handleDrop(e, targetContainer) {
@@ -123,6 +128,9 @@
                     const json = await response.json();
                     const items = json.data;
 
+                    console.log(plan_items);
+                    console.log(items);
+
                     items.forEach((item) => {
                         const itemDiv = document.createElement("div");
                         itemDiv.className = "plan-items";
@@ -140,9 +148,10 @@
                         });
 
                         unplanned.appendChild(itemDiv);
-                        L.marker([item.lat, item.lng]).bindPopup(item.title).addTo(map);
+                        // marker = L.marker([item.lat, item.lng]).bindPopup(item.title).addTo(map);
+                        // markers.push(marker)
                     });
-                    console.log(plan_items);
+                    
                     plan_items.forEach((item) => {
                         const planItem = document.getElementById(item["plan-item"])
                         const planItemList = document.getElementsByClassName("plan-box")
@@ -153,6 +162,40 @@
                         }
                     })
 
+                    for (item of items) {
+                        var category = '';
+                        var plan_name = '';
+                        var color = '';
+
+                        if (item.category === "restaurant") {
+                            category = "fa-solid fa-utensils";
+                        } else if (item.category === "museum") {
+                            category = "fa-solid fa-building-columns"
+                        } else if (item.category === "activity") {
+                            category = "fa-solid fa-person-swimming"
+                        } else if (item.category === "hotel") {
+                            category = "fa-solid fa-bed"
+                        };
+                        
+                        console.log(plan_items);
+                        for (plan of plan_items) {
+                            if (plan["plan-item"] === item._id) {
+                                plan_name = plan["plan-name"];
+                                color = colors[(plan_names.indexOf(plan_name))]
+                                break
+                            }
+                        };
+
+                        icon = L.divIcon({
+                            className: 'custom-div-icon',
+                                html: `<div style='background-color:${color}' class='marker-pin'></div><i class=${category}>`,
+                                iconSize: [30, 42],
+                                iconAnchor: [15, 42]
+                            });
+                        
+                        marker = L.marker([item.lat, item.lng], {icon : icon}).bindPopup(`${item.title} / ${plan_name}`).addTo(map);
+                        markers.push(marker)
+                    }
                 }
                 loadItems();
 
