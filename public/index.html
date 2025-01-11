@@ -68,12 +68,13 @@
                 </div>
 
                 <div id="main-planner">
-                    <span>Plan</span>
-                    <button id="add-button" onclick="addPlan()"><span class="material-symbols-outlined">
-                        add
-                        </span></button>
-                    <button id="save-button" onclick="savePlan()"><span class="material-symbols-outlined">save</span></button>
-                        
+                    <div class="planner-control">
+                        <span>Plan</span>
+                        <button id="add-button" onclick="addPlan()"><span class="material-symbols-outlined">
+                            add
+                            </span></button>
+                        <button id="save-button" onclick="savePlan()"><span class="material-symbols-outlined">save</span></button>
+                    </div>
                     <div id="planned-items">
                     </div>
 
@@ -148,8 +149,6 @@
                         });
 
                         unplanned.appendChild(itemDiv);
-                        // marker = L.marker([item.lat, item.lng]).bindPopup(item.title).addTo(map);
-                        // markers.push(marker)
                     });
                     
                     plan_items.forEach((item) => {
@@ -189,19 +188,12 @@
                                 break
                             }
                         };
-
-                        // icon = L.divIcon({
-                        //     className: 'custom-div-icon',
-                        //         html: `<div style='background-color:${color}' class='marker-pin'></div><i class=${category}>`,
-                        //         iconSize: [30, 42],
-                        //         iconAnchor: [15, 42]
-                        //     });
                         
                         icon = L.divIcon({
                             className: 'custom-div-icon',
-                                html: `<span style='background-color:${color}; border-radius: 50%;' class="material-symbols-outlined">${category}</span>`,
-                                iconSize: [30, 42],
-                                iconAnchor: [15, 42]
+                                html: `<span style='background-color:${color}; border-radius: 50%; border:1px solid #000' class="material-symbols-outlined">${category}</span>`,
+                                iconSize: [25, 30],
+                                iconAnchor: [12, 30]
                             });
 
                         marker = L.marker([item.lat, item.lng], {icon : icon}).bindPopup(`${item.title} / ${plan_name}`).addTo(map);
