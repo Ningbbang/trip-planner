@@ -1,9 +1,9 @@
-{"trip_code":"2501_turkey","category":"restaurant","title":"Suleymaniye Camii","desc":"Suleymaniye Camii","lat":"41.01617440487126","lng":"28.96398961544037","_id":"1Z0gPHrTcoDT9Fmu"}
-{"trip_code":"2501_turkey","category":"restaurant","title":"Dolmabahçe Sarayı","desc":"Dolmabahce Palace","lat":"41.039702854755916","lng":"29.00178194046021","_id":"3g8Mg9gNJNyDxk7F"}
-{"trip_code":"2501_turkey","category":"restaurant","title":"Sultanahmet camii","desc":"Blue Mosque","lat":"41.00537456558765","lng":"28.976869583129886","_id":"5IPuP1GSERLjUbYB"}
-{"trip_code":"2501_turkey","category":"restaurant","title":"Şerefiye Sarnıcı","desc":"Şerefiye Sarnıcı","lat":"41.007370321398334","lng":"28.972368836402893","_id":"72YVfR7nLp51vCsN"}
-{"trip_code":"2501_turkey","category":"restaurant","title":"Galata Kulesi","desc":"Galata Kulesi","lat":"41.02802061789221","lng":"28.975120782852176","_id":"8TDPoS568ywAAKTj"}
-{"trip_code":"2501_turkey","category":"restaurant","title":"Archeological Museum","desc":"Archeological Museum","lat":"41.01170572056366","lng":"28.981322050094608","_id":"BH63pL4wQ7bdQvJ9"}
-{"trip_code":"2501_turkey","category":"museum","title":"test","desc":"test","lat":"41.00477542222949","lng":"28.935241699218754","_id":"Br2E0h2iyODSHUFY"}
-{"trip_code":"2501_turkey","category":"restaurant","title":"Kız Kulesi","desc":"Maiden's Tower","lat":"41.02107989402561","lng":"29.004088640213016","_id":"D0D9EiBJpkwx7oRY"}
-{"trip_code":"2501_turkey","category":"restaurant","title":"Ayasofya Cami","desc":"hagiasofia mosque","lat":"41.00843496965307","lng":"28.97998094558716","_id":"UgruDlwav6fYJELU"}
+{"trip_code":"2501_turkey","category":"museum","title":"Suleymaniye Camii","desc":"Suleymaniye Camii","lat":"41.01617440487126","lng":"28.96398961544037","_id":"1Z0gPHrTcoDT9Fmu"}
+{"trip_code":"2501_turkey","category":"museum","title":"Dolmabahçe Sarayı","desc":"Dolmabahce Palace","lat":"41.039702854755916","lng":"29.00178194046021","_id":"3g8Mg9gNJNyDxk7F"}
+{"trip_code":"2501_turkey","category":"museum","title":"Sultanahmet camii","desc":"Blue Mosque","lat":"41.00537456558765","lng":"28.976869583129886","_id":"5IPuP1GSERLjUbYB"}
+{"trip_code":"2501_turkey","category":"museum","title":"Şerefiye Sarnıcı","desc":"Şerefiye Sarnıcı","lat":"41.007370321398334","lng":"28.972368836402893","_id":"72YVfR7nLp51vCsN"}
+{"trip_code":"2501_turkey","category":"museum","title":"Galata Kulesi","desc":"Galata Kulesi","lat":"41.02802061789221","lng":"28.975120782852176","_id":"8TDPoS568ywAAKTj"}
+{"trip_code":"2501_turkey","category":"museum","title":"Archeological Museum","desc":"Archeological Museum","lat":"41.01170572056366","lng":"28.981322050094608","_id":"BH63pL4wQ7bdQvJ9"}
+{"trip_code":"2501_turkey","category":"hotel","title":"test","desc":"test","lat":"41.00477542222949","lng":"28.935241699218754","_id":"Br2E0h2iyODSHUFY"}
+{"trip_code":"2501_turkey","category":"museum","title":"Kız Kulesi","desc":"Maiden's Tower","lat":"41.02107989402561","lng":"29.004088640213016","_id":"D0D9EiBJpkwx7oRY"}
+{"trip_code":"2501_turkey","category":"museum","title":"Ayasofya Cami","desc":"hagiasofia mosque","lat":"41.00843496965307","lng":"28.97998094558716","_id":"UgruDlwav6fYJELU"}
