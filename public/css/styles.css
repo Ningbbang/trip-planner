@@ -466,4 +466,70 @@ body {
     .header-menu-item .material-symbols-outlined {
         font-size: 14px;
     }
+
+
+    /* list-page-mobile */
+    #list-add {
+        grid-template-areas:main1;
+        margin: 0;
+        width:100vw;
+    }
+
+    #list-add div {
+        padding: 5px 5px;
+        text-align:center;
+        width: 100vw;
+        height: 60px;
+        box-shadow: 0 6px 7px -4px rgba(0, 0, 0, 0.2);
+    }
+
+    .list-item {
+        padding-top:5px;
+        padding:3px;
+        text-align:left;
+        font-size: 12px;
+        overflow-y:auto;
+    }
+
+    .list-item p {
+        margin: 0px;
+        text-align:left;
+    }
+
+    /* add-page-mobile */
+    .add-item-grid {
+        display: grid;
+        grid-template-columns: 50vw 50vw;
+    }
+
+    #map {
+        grid-column: 1;
+        width:100vw;
+        height:50vh;
+        box-shadow: 0 6px 7px -2px rgba(0, 0, 0, 0.2);
+        margin: 0 5px 0 5px;
+    }
+
+    #main-picture {
+        grid-column:2;
+        width:100vw;
+        height:50vh;
+        align-items: center;
+        vertical-align: center;
+        box-shadow: 0 6px 7px -2px rgba(0, 0, 0, 0.2);
+    }
+
+    #add-item {
+        box-shadow: 0 6px 7px -2px rgba(0, 0, 0, 0.2);
+    }
+
+    #item-detail{
+        font-size: 12px;
+        padding: 3px;
+        box-shadow: 0 6px 7px -2px rgba(0, 0, 0, 0.2);
+    }
+
+    #item-detail > div{
+        padding : 5px;
+    }
 }
