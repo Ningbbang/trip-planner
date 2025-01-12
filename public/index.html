@@ -9,7 +9,6 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-aF5/MB+BuKiqTrhFz/NX2PxLEhrO7OhXZ5wI2L5U6cgGTRJdqVWvdcOdJVA7U9ZMWQnU1E9MT9KElr7K3wDL7g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     </head>
     <body>
@@ -100,7 +99,9 @@
                     const plan_response = await fetch('/plan')
                     const plan_json = await plan_response.json();
                     const plan_items = plan_json.data;
+
                     let plan_names = [... new Set(plan_items.map(x=>x['plan-name']))];
+                    plan_names.sort();
                     var idx = 0;
 
                     plan_names.forEach((item) => {
@@ -128,9 +129,6 @@
                     const response = await fetch('/overview')
                     const json = await response.json();
                     const items = json.data;
-
-                    console.log(plan_items);
-                    console.log(items);
 
                     items.forEach((item) => {
                         const itemDiv = document.createElement("div");
@@ -180,7 +178,6 @@
                             category = "bed"
                         };
                         
-                        console.log(plan_items);
                         for (plan of plan_items) {
                             if (plan["plan-item"] === item._id) {
                                 plan_name = plan["plan-name"];
