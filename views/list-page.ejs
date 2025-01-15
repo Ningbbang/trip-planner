@@ -70,14 +70,14 @@
                     // const plan_response = await fetch('/overview')
                     const plan_response = await fetch('/api/<%= category %>')
                     const plan_json = await plan_response.json();
-                    const plan_items = plan_json.data;
+                    const plan_items = plan_json.results;
                     const container = document.getElementById("list-add");
                     console.log(plan_items)
 
                     plan_items.forEach((item) => {
                         var list_add = document.createElement("div")
                         list_add.classList.add("list-item")
-                        list_add.innerHTML = `<p>Title : ${item.title}</p><p>Description : ${item.desc}</p><p>lat : ${item.lat} / lng : ${item.lng}</p>`
+                        list_add.innerHTML = `<p>Title : ${item.title}</p><p>Description : ${item.description}</p><p>lat : ${item.lat} / lng : ${item.lng}</p>`
                         container.append(list_add)
                     })
                 }

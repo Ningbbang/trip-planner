@@ -96,12 +96,25 @@
 
                 async function loadItems(){
                     const colors = ['#ff83b0', '#dd97e8', '#f57a73', '#fec15e', '#ffff00', '#ccff00', '#7c9d45', '#4ebcff', '#002790', '#001d4f', '#473083', '#6a3896'];
-                    const plan_response = await fetch('/plan')
-                    const plan_json = await plan_response.json();
-                    const plan_items = plan_json.data;
+                    const plan_response = await fetch('/plan');
+                    
+                    // Check if the response is OK
+                    if (!plan_response.ok) {
+                        throw new Error(`HTTP error! Status: ${plan_response.status}`);
+                    }
 
-                    let plan_names = [... new Set(plan_items.map(x=>x['plan-name']))];
+                    const plan_json = await plan_response.json();
+                    const plan_items = plan_json.results; // Use optional chaining to handle undefined `data`
+                    
+                    if (!Array.isArray(plan_items)) {
+                        console.warn('plan_items is not an array or undefined:', plan_items);
+                        return; // Exit if plan_items is not valid
+                    }
+
+                    // Extract unique plan names
+                    let plan_names = [...new Set(plan_items.map(x => x['plan_name']))];
                     plan_names.sort();
+                
                     var idx = 0;
 
                     plan_names.forEach((item) => {
@@ -135,7 +148,7 @@
                         itemDiv.className = "plan-items";
                         itemDiv.draggable = true;
                         itemDiv.textContent = item.title;
-                        itemDiv.id = item._id;
+                        itemDiv.id = item.id;
 
                         itemDiv.addEventListener("dragstart", function (e) {
                             e.dataTransfer.setData("text/plain", e.target.id);
@@ -150,10 +163,10 @@
                     });
                     
                     plan_items.forEach((item) => {
-                        const planItem = document.getElementById(item["plan-item"])
+                        const planItem = document.getElementById(item["plan_item"])
                         const planItemList = document.getElementsByClassName("plan-box")
                         for (list of planItemList) {
-                            if (list.querySelector("div > span:nth-child(2)").textContent === item["plan-name"]) {
+                            if (list.querySelector("div > span:nth-child(2)").textContent === item["plan_name"]) {
                                 list.appendChild(planItem)
                             }
                         }
@@ -179,8 +192,8 @@
                         };
                         
                         for (plan of plan_items) {
-                            if (plan["plan-item"] === item._id) {
-                                plan_name = plan["plan-name"];
+                            if (parseInt(plan["plan_item"]) === item.id) {
+                                plan_name = plan["plan_name"];
                                 color = colors[(plan_names.indexOf(plan_name))]
                                 break
                             }
@@ -275,7 +288,7 @@
                         const items = list.getElementsByClassName("plan-items")
                         if (items) {
                             for (item of items) {
-                                itemData.push({'plan-name':planName.textContent, 'plan-item':item.id})
+                                itemData.push({'plan_name':planName.textContent, 'plan_item':item.id})
                             }
                         }
                     }
@@ -297,8 +310,7 @@
                         console.log("Plan added:", data);
                     })
                     alert('Plan saved!')
-
-                }
+                };
             </script>
     </body>
 <html>
