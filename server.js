@@ -14,40 +14,19 @@ const connection = db.createConnection({
     port: 3306
 });
 
-require('dotenv').config();
 port = process.env.PORT
 connection.connect();
 
-
-  
-/* nedb */
-
-// const log_db = new Datastore({filename: path.join(__dirname, 'databases', 'log_db.db')});
-// const places_db = new Datastore({filename: path.join(__dirname, 'databases', 'places_db.db')});
-// const plan_db = new Datastore({filename: path.join(__dirname, 'databases', 'plan_db.db')});
-
-// log_db.loadDatabase();
-// places_db.loadDatabase();
-// plan_db.loadDatabase();
-
 app.set('view engine', 'ejs');
 app.set('views', './views');
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
-/* nedb post places_db */
-// app.post('/add-item/:category', (req, res) => {
-//     const category = req.params.category;
-//     const data = req.body;
-//     places_db.insert(data);
-//     res.json(data);
-//     // return res.redirect(`/list-page/${category}`)
-// });
 
-app.post('/add-item/:category', (req, res) => {
+app.post('/:trip_code/add-item/:category', (req, res) => {
     const category = req.params.category;
     const data = req.body;
-    const trip_code = "2501_turkey";
+    const trip_code = req.params.trip_code;
     const title = data.title;
     const description = data.desc;
     const lat = data.lat;
@@ -63,27 +42,50 @@ app.post('/add-item/:category', (req, res) => {
     });
 });
 
-app.get('/overview', (req, res) => {
-    const sql = "SELECT * FROM places_db";
-    connection.query(sql, (err, result) => {
+app.get('/', (req, res) => {
+    res.redirect('/2501_turkey/overview/');
+});
+
+app.get('/map', (req, res) => {
+    res.render('map');
+});
+
+app.get('/:trip_code/overview', (req, res) => {
+    const trip_code = req.params.trip_code;
+    const sql = `SELECT * FROM places_db where trip_code = '${trip_code}'`;
+    connection.query(sql, (err, results) => {
         if (err) {
             console.error('Error fetching overview:', err);
             return res.status(500).json({ error: 'Failed to fetch overview data' });
         }
-        res.json({ data: result });
+        res.render('overview', {trip_code, results})
     });
 });
 
-app.post('/plan', (req, res) => {
+app.get('/api/:trip_code/overview', (req, res) => {
+    const trip_code = req.params.trip_code;
+    const sql = `SELECT * FROM places_db where trip_code = '${trip_code}'`;
+    connection.query(sql, (err, results) => {
+        if (err) {
+            console.error('Error fetching overview:', err);
+            return res.status(500).json({ error: 'Failed to fetch overview data' });
+        }
+        res.json({data:results});
+    });
+});
+
+app.post('/:trip_code/plan', (req, res) => {
+    const trip_code = req.params.trip_code;
     const data = req.body;
-    var sql = "DELETE FROM plan_db"
+    var sql = `DELETE FROM plan_db where trip_code = '${trip_code}'`
     connection.query(sql);
 
     data.forEach((item) => {
+        var trip_code = item.trip_code;
         var plan_name = item.plan_name;
         var plan_item = item.plan_item;
-        var sql = "INSERT INTO plan_db (plan_name, plan_item) VALUES (?, ?)";
-        connection.query(sql, [plan_name, plan_item], function (err, result) {
+        var sql = "INSERT INTO plan_db (plan_name, plan_item, trip_code) VALUES (?, ?, ?)";
+        connection.query(sql, [plan_name, plan_item, trip_code], function (err, result) {
             if(err) throw (err);
             console.log('plan added : ', result);
         });
@@ -91,17 +93,20 @@ app.post('/plan', (req, res) => {
 });
 
 
-app.get('/plan', (req, res) => {
-    var sql = "SELECT * FROM plan_db"
+app.get('/:trip_code/plan', (req, res) => {
+    const trip_code = req.params.trip_code;
+
+    var sql = `SELECT * FROM plan_db where trip_code = '${trip_code}'`
     connection.query(sql, function (err, results) {
         if (err) throw (err);
         res.json({results});
     });
 });
 
-app.get('/api/:category', (req, res) => {
+app.get('/api/:trip_code/:category', (req, res) => {
+    const trip_code = req.params.trip_code;
     const category = req.params.category;
-    var sql = `SELECT * FROM places_db WHERE category = '${category}'`
+    var sql = `SELECT * FROM places_db WHERE category = '${category}' and trip_code = '${trip_code}'`
     connection.query(sql, function (err, results) {
         if (err) {
             res.status(500).send('Error retrieving data');
@@ -111,21 +116,23 @@ app.get('/api/:category', (req, res) => {
     });
 });
 
-app.get('/list-page/:category', (req, res) => {
+app.get('/:trip_code/list-page/:category', (req, res) => {
+    const trip_code = req.params.trip_code;
     const category = req.params.category;
-    var sql = `SELECT * FROM places_db WHERE category = '${category}'`
+    var sql = `SELECT * FROM places_db WHERE category = '${category}' and trip_code = '${trip_code}'`
     connection.query(sql, function (err, results) {
         if (err) {
             res.status(500).send('Error retrieving data');
             return;
         }
-        res.render('list-page', { category, results });
+        res.render('list-page', { trip_code, category, results });
     });
 });
 
-app.get('/add-item/:category', (req, res) => {
+app.get('/:trip_code/add-item/:category', (req, res) => {
+    const trip_code = req.params.trip_code;
     const category = req.params.category;
-    res.render('add-item', { category });
+    res.render('add-item', { trip_code, category });
 })
 
 app.listen(port, () => {

@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial_scale=1.0">
         <meta charset="utf-8">
 
-        <link rel="stylesheet" href="../css/styles.css">
+        <link rel="stylesheet" href="/css/styles.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
@@ -14,19 +14,19 @@
         <div class="grid-container">
             <!-- Header -->
             <header class="header">
-                <div class="header-menu-item" onclick="window.location.href='/'">
+                <div class="header-menu-item" onclick="window.location.href='/<%= trip_code %>/overview/'">
                     <span class="material-symbols-outlined">overview</span> Overview</a>
                 </div>
-                <div class="header-menu-item" onclick="window.location.href='/list-page/restaurant'">
+                <div class="header-menu-item" onclick="window.location.href='/<%= trip_code %>/list-page/restaurant/'">
                     <span class="material-symbols-outlined">restaurant</span> Restaurant
                 </div>
-                <div class="header-menu-item" onclick="window.location.href='/list-page/museum'">
+                <div class="header-menu-item" onclick="window.location.href='/<%= trip_code %>/list-page/museum/'">
                     <span class="material-symbols-outlined">church</span> Museum
                 </div>
-                <div class="header-menu-item" onclick="window.location.href='/list-page/activity'">
+                <div class="header-menu-item" onclick="window.location.href='/<%= trip_code %>/list-page/activity/'">
                     <span class="material-symbols-outlined">pool</span> Activity
                 </div>
-                <div class="header-menu-item" onclick="window.location.href='/list-page/hotel'">
+                <div class="header-menu-item" onclick="window.location.href='/<%= trip_code %>/list-page/hotel/'">
                     <span class="material-symbols-outlined">bed</span> Hotel
                 </div>
             </header>
@@ -36,39 +36,35 @@
             <aside id="sidebar">
                 <div class="sidebar-title">
                     <div class="sidebar-brand">
-                        <a href="index.html"><span class="material-symbols-outlined">inventory</span> Ningbbang</a>
+                        <a href="/<%= trip_code %>/overview/"><span class="material-symbols-outlined">inventory</span> Ningbbang</a>
                         <span class="material-symbols-outlined" onclick="closeSidebar()">close</span>
                     </div>
                 </div>
 
                 <ul class="sidebar-list">
                     <li class="sidebar-list-item" onclick="page1()">
-                        <img alt="Türkiye" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/TR.svg" width="20px" height="15px"> Türkiye (Jan, 2025)
+                        <a href="/2501_turkey/overview/"><img alt="Türkiye" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/TR.svg" width="20px" height="15px"> Türkiye (Jan, 2025)</a>
                     </li>
                     <li class="sidebar-list-item" onclick="page2()">
-                        <img alt="Türkiye" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/TR.svg" width="20px" height="15px"> Türkiye (Aug, 2025)
+                        <a href="/2509_korea/overview/"><img alt="Korea" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/KR.svg" width="20px" height="15px"> Korea (Sep, 2025)</a>
                     </li>
                     <li class="sidebar-list-item" onclick="page3()">
-                        <img alt="Korea" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/KR.svg" width="20px" height="15px"> Korea (Aug, 2025)
+                        <a href="/2512_spain/overview/"><img alt="España" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/ES.svg" width="20px" height="15px"> España (Sep, 2025)</a>
                     </li>
                     <li class="sidebar-list-item" onclick="page4()">
-                        <img alt="Thailand" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/TH.svg" width="20px" height="15px"> Thailand (Sep, 2025)
-                    </li>
-                    <li class="sidebar-list-item" onclick="page5()">
-                        <img src="korea-logo.png" width="20px" height="20px"> 백제 (Soon)
+                        <a href="/soon_baekje/overview/"><img src="/korea-logo.png" width="20px" height="20px"> 백제 (Soon)</a>
                     </li>
                 </ul>
             </aside>
 
             <!-- add page -->
-            <div id="list-add" onclick="window.location.href='/add-item/<%= category %>'" style="width: 25px; height: 25px;">
+            <div id="list-add" onclick="window.location.href='/<%= trip_code %>/add-item/<%= category %>'" style="width: 25px; height: 25px;">
                 <span class="material-symbols-outlined">add</span></a>
             </div>
 
             <script>
                 async function loadPlaces(){
-                    // const plan_response = await fetch('/overview')
-                    const plan_response = await fetch('/api/<%= category %>')
+                    const plan_response = await fetch('/api/<%= trip_code %>/<%= category %>')
                     const plan_json = await plan_response.json();
                     const plan_items = plan_json.results;
                     const container = document.getElementById("list-add");
