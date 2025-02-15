@@ -47,16 +47,16 @@
                 </div>
 
                 <ul class="sidebar-list">
-                    <li class="sidebar-list-item" onclick="page1()">
+                    <li class="sidebar-list-item">
                         <a href="/2501_turkey/overview/"><img alt="Türkiye" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/TR.svg" width="20px" height="15px"> Türkiye (Jan, 2025)</a>
                     </li>
-                    <li class="sidebar-list-item" onclick="page2()">
+                    <li class="sidebar-list-item">
                         <a href="/2509_korea/overview/"><img alt="Korea" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/KR.svg" width="20px" height="15px"> Korea (Sep, 2025)</a>
                     </li>
-                    <li class="sidebar-list-item" onclick="page3()">
+                    <li class="sidebar-list-item">
                         <a href="/2512_spain/overview/"><img alt="España" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/ES.svg" width="20px" height="15px"> España (Sep, 2025)</a>
                     </li>
-                    <li class="sidebar-list-item" onclick="page4()">
+                    <li class="sidebar-list-item">
                         <a href="/soon_baekje/overview/"><img src="/korea-logo.png" width="20px" height="20px"> 백제 (Soon)</a>
                     </li>
                 </ul>
@@ -94,19 +94,26 @@
                     })
                     .setView([41.0, 28.9], 11);
                 var markers = [];
-                function myMap() {
+                async function myMap() {
+                    const trip_center_response = await fetch('/api/<%= trip_code %>/trip_center');
+                    const trip_center = await trip_center_response.json();
+                    const lat = trip_center.data[0].lat;
+                    const lng = trip_center.data[0].lng;
+                    const zoom = trip_center.data[0].zoom;
+
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                         maxZoom: 19,
                         attribution: '© OpenStreetMap contributors'
                     }).addTo(map);
                     L.Control.geocoder().addTo(map);
+                    map.setView([lat, lng], zoom);
                 }
                 myMap();
 
                 async function loadItems(){
                     const colors = ['#ff83b0', '#dd97e8', '#f57a73', '#fec15e', '#ffff00', '#ccff00', '#7c9d45', '#4ebcff', '#002790', '#001d4f', '#473083', '#6a3896'];
                     const plan_response = await fetch('/<%= trip_code %>/plan');
-                    
+
                     // Check if the response is OK
                     if (!plan_response.ok) {
                         throw new Error(`HTTP error! Status: ${plan_response.status}`);

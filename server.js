@@ -62,6 +62,18 @@ app.get('/:trip_code/overview', (req, res) => {
     });
 });
 
+app.get('/api/:trip_code/trip_center', (req, res) => {
+    const trip_code = req.params.trip_code;
+    const sql = `SELECT * FROM trip_center where trip_code = '${trip_code}'`;
+    connection.query(sql, (err, results) => {
+        if (err) {
+            console.error('Error fetching overview:', err);
+            return res.status(500).json({ error: 'Failed to fetch overview data' });
+        }
+        res.json({data:results});
+    });
+});
+
 app.get('/api/:trip_code/overview', (req, res) => {
     const trip_code = req.params.trip_code;
     const sql = `SELECT * FROM places_db where trip_code = '${trip_code}'`;
