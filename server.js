@@ -33,7 +33,7 @@ app.post('/:trip_code/add-item/:category', (req, res) => {
     const lng = data.lng;
     const url = data.url;
 
-    var sql = `INSERT INTO places_db (trip_code, category, title, description, lat, lng) VALUES (?, ?, ?, ?, ?, ?)`
+    var sql = `INSERT INTO places_db (trip_code, category, title, description, lat, lng) VALUES (?, ?, ?, ?, ?, ?, ?)`
     connection.query(sql, [trip_code, category, title, description, lat, lng, url], (err, results) => {
         if (err) {
             console.error('Error executing query: ', err);
