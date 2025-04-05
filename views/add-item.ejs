@@ -57,7 +57,7 @@
                         <a href="/2512_spain/overview/"><img alt="España" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/ES.svg" width="20px" height="15px"> España (Sep, 2025)</a>
                     </li>
                     <li class="sidebar-list-item">
-                        <a href="/soon_baekje/overview/"><img src="/korea-logo.png" width="20px" height="20px"> 백제 (Soon)</a>
+                        <a href="/2503_baekje/overview/"><img src="/korea-logo.png" width="20px" height="20px"> 백제 (Mar, 2025)</a>
                     </li>
                 </ul>
             </aside>
@@ -90,6 +90,10 @@
                         <label for="desc">Description</label>
                         <input type="text" id="desc">
                     </div>
+                    <div class="url">
+                        <label for="url">Googlemaps Link</label>
+                        <input type="text" id="url">
+                    </div>
                     <div>
                         <button type="button" onclick="addItem()">Save</button>
                     </div>
@@ -100,7 +104,7 @@
                 const trip_code = '<%= trip_code %>';
                 const category = '<%= category %>';
                 var marker = []
-                var map
+                let map
 
                 function viewImage(event) {
                     var input = event.target;
@@ -114,7 +118,13 @@
                     }
                 };
 
-                function myMap(){
+                async function myMap(){
+                    const trip_center_response = await fetch('/api/<%= trip_code %>/trip_center');
+                    const trip_center = await trip_center_response.json();
+                    const lat = trip_center.data[0].lat;
+                    const lng = trip_center.data[0].lng;
+                    const zoom = trip_center.data[0].zoom;
+
                     map = L.map('map', {
                         fullscreenControl: true,
                         fullscreenControlOptions: {
@@ -127,27 +137,29 @@
                         attribution: '© OpenStreetMap contributors'
                     }).addTo(map);
                     
+                    map.setView([lat, lng], zoom);
                     L.Control.geocoder().addTo(map);
+
+                    map.on('click', function(e) {
+                        console.log(marker[0]);
+                        if (marker.length > 0) {
+                            map.removeLayer(marker[0]);
+                        }
+                        marker = [];
+                        var mc = new L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+                        marker.push(mc);
+                        document.getElementById("lat").value = e.latlng.lat;
+                        document.getElementById("lng").value = e.latlng.lng;
+                    });
                 };
                 myMap();
-
-                map.on('click', function(e) {
-                    console.log(marker[0]);
-                    if (marker.length > 0) {
-                        map.removeLayer(marker[0]);
-                    }
-                    marker = [];
-                    var mc = new L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
-                    marker.push(mc);
-                    document.getElementById("lat").value = e.latlng.lat;
-                    document.getElementById("lng").value = e.latlng.lng;
-                });
 
                 async function addItem() {
                     const title = document.getElementById("title").value;
                     const desc = document.getElementById("desc").value;
                     const lat = document.getElementById("lat").value;
                     const lng = document.getElementById("lng").value;
+                    const url = document.getElementById("url").value;
 
                     const itemData = {
                         trip_code: trip_code,
@@ -155,7 +167,8 @@
                         title: title,
                         desc: desc,
                         lat: lat,
-                        lng: lng
+                        lng: lng,
+                        url: url
                     }
                     console.log(itemData);
                     
@@ -175,6 +188,7 @@
                     document.getElementById("desc").value = "";
                     document.getElementById("lat").value = "";
                     document.getElementById("lng").value = "";
+                    document.getElementById("url").value = "";
                     alert("saved")
                     
                 };

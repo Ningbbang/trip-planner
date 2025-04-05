@@ -31,9 +31,10 @@ app.post('/:trip_code/add-item/:category', (req, res) => {
     const description = data.desc;
     const lat = data.lat;
     const lng = data.lng;
+    const url = data.url;
 
     var sql = `INSERT INTO places_db (trip_code, category, title, description, lat, lng) VALUES (?, ?, ?, ?, ?, ?)`
-    connection.query(sql, [trip_code, category, title, description, lat, lng], (err, results) => {
+    connection.query(sql, [trip_code, category, title, description, lat, lng, url], (err, results) => {
         if (err) {
             console.error('Error executing query: ', err);
             return res.status(500).json({error: 'Failed to add item to the database'});
@@ -43,7 +44,7 @@ app.post('/:trip_code/add-item/:category', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.redirect('/2501_turkey/overview/');
+    res.redirect('/2509_korea/overview/');
 });
 
 app.get('/map', (req, res) => {

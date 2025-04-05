@@ -42,17 +42,17 @@
                 </div>
 
                 <ul class="sidebar-list">
-                    <li class="sidebar-list-item" onclick="page1()">
+                    <li class="sidebar-list-item">
                         <a href="/2501_turkey/overview/"><img alt="Türkiye" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/TR.svg" width="20px" height="15px"> Türkiye (Jan, 2025)</a>
                     </li>
-                    <li class="sidebar-list-item" onclick="page2()">
+                    <li class="sidebar-list-item">
                         <a href="/2509_korea/overview/"><img alt="Korea" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/KR.svg" width="20px" height="15px"> Korea (Sep, 2025)</a>
                     </li>
-                    <li class="sidebar-list-item" onclick="page3()">
+                    <li class="sidebar-list-item">
                         <a href="/2512_spain/overview/"><img alt="España" src="http://purecatamphetamine.github.io/country-flag-icons/3x2/ES.svg" width="20px" height="15px"> España (Sep, 2025)</a>
                     </li>
-                    <li class="sidebar-list-item" onclick="page4()">
-                        <a href="/soon_baekje/overview/"><img src="/korea-logo.png" width="20px" height="20px"> 백제 (Soon)</a>
+                    <li class="sidebar-list-item">
+                        <a href="/2503_baekje/overview/"><img src="/korea-logo.png" width="20px" height="20px"> 백제 (Mar, 2025)</a>
                     </li>
                 </ul>
             </aside>
@@ -68,10 +68,10 @@
                     const plan_json = await plan_response.json();
                     const plan_items = plan_json.results;
                     const container = document.getElementById("list-add");
-                    console.log(plan_items)
 
                     plan_items.forEach((item) => {
                         var list_add = document.createElement("div")
+                        list_add.id = item.id
                         list_add.classList.add("list-item")
                         list_add.innerHTML = `<p>Title : ${item.title}</p><p>Description : ${item.description}</p><p>lat : ${item.lat} / lng : ${item.lng}</p>`
                         container.append(list_add)
